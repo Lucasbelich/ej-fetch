@@ -81,6 +81,7 @@ const userGameSelector = () => {
     if (e.target.classList.contains("btn-primary")) {
       setCart(e.target.parentElement);
     }
+    sweetToast(`green`, `success`, `bottom-start`, `Se ha añadido un producto`)
   };
 };
 
@@ -150,6 +151,7 @@ const showFooter = () => {
   cleanCart.addEventListener(`click`, () => {
     cart = {};
     showCart();
+    sweetAlert(`error`, `El carrito ha sido eliminado`)
   });
 };
 
@@ -164,6 +166,7 @@ const btnAction = (e) => {
     // utilizo operador avanzado spread
     cart[e.target.id] = { ...product };
     showCart();
+    sweetToast(`green`, `success`, `bottom-start`, `Se ha añadido un producto`)
   }
 
   if (e.target.classList.contains("btn-danger")) {
@@ -176,6 +179,7 @@ const btnAction = (e) => {
       delete cart[e.target.id];
     }
     showCart();
+    sweetToast(`red`, `error`, `bottom-start`, `Se ha eliminado un producto`)
   }
   //evitar la propagacion del evento
   e.stopPropagation();
@@ -186,6 +190,43 @@ if (localStorage.getItem("cart")) {
   showCart();
 }
 //El setItem ubicado dentro de la funcion showCart para obtenerlo de una forma dinamica y no cargarlo de a uno.
+
+//Incorporacion de librerias
+const sweetAlert = (icono, texto) => {
+  Swal.fire({
+    icon: icono,
+    showConfirmButton: false,
+    text: texto,
+    timer: 3000,
+    timerProgressBar: true,
+    showClass: {
+      popup: 'animate__animated animate__bounceInRight '
+    },
+    hideClass: {
+      popup: 'animate__animated animate__bounceOutRight '
+    }
+  });
+}
+
+const sweetToast = (color, icono, posicion, texto) => {
+  Swal.fire({
+    background: color,
+    icon: icono,
+    color: `#fff`,
+    position: posicion,
+    showConfirmButton: false,
+    text: texto,
+    timer: 3000,
+    timerProgressBar: true,
+    toast: true,
+    showClass: {
+      popup: 'animate__animated animate__bounceInRight '
+    },
+    hideClass: {
+      popup: 'animate__animated animate__bounceOutRight '
+    }
+  });
+}
 
 welcome();
 userGameSelector();
