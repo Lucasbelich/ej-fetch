@@ -1,6 +1,6 @@
 // Tienda de video-juegos
 // 1) Bienvenida al cliente
-// 2) Seleccion del video-juegos
+// 2) Seleccion de video-juegos
 // 3) Carro de compras
 // 4) Almacenar carrito en localStorage
 
@@ -11,11 +11,17 @@ const templateCart = document.getElementById("template-cart").content;
 const fragment = document.createDocumentFragment();
 let cart = {};
 
+//Incorporacion de Fetch
+async function getGames() {
+  const response = await fetch("./juegos.json");
+  return await response.json();
+}
+
 items.addEventListener("click", (e) => {
   btnAction(e);
 });
 
-const juego1 = {
+/* const juego1 = {
   id: 1,
   nombre: `Grand Theft Auto 5`,
   precio: 5000,
@@ -41,7 +47,7 @@ const juego5 = {
   precio: 11000,
 };
 
-const juegos = [juego1, juego2, juego3, juego4, juego5];
+const juegos = [juego1, juego2, juego3, juego4, juego5]; */
 
 const welcome = () => {
   let formPerson = document.getElementById("idForm");
@@ -56,16 +62,28 @@ const welcome = () => {
 };
 
 const userGameSelector = () => {
-  
   let divGames = document.getElementById("divGames");
-  
 
   divGames.addEventListener("click", (e) => {
     addCart(e);
   });
 
+  getGames().then((juegos) => {
+    juegos.forEach((juegos) => {
+      divGames.innerHTML += `
+              <div class="card" id="juego${juegos.id}" style="width: 18rem;">
+                  <img src="./img/${juegos.img}" class="card-img-top" alt="${juegos.nombre}">
+                  <div class="card-body">
+                      <h5 class="card-title">${juegos.nombre}</h5>
+                      <p class="card-text">${juegos.precio}</p>
+                      <button id="${juegos.id}" class="btn btn-primary" > Comprar </button>
+                      </div>
+                  </div>
+              `;
+    });
+  });
 
-  juegos.forEach((juego, i) => {
+  /* juegos.forEach((juego, i) => {
     divGames.innerHTML += `
             <div class="card" id="juego${i}" style="width: 18rem;">
                 <div class="card-body">
@@ -75,21 +93,21 @@ const userGameSelector = () => {
                     </div>
                 </div>
             `;
-  });
+  }); */
 
   let addCart = (e) => {
     if (e.target.classList.contains("btn-primary")) {
       setCart(e.target.parentElement);
     }
-    sweetToast(`green`, `success`, `bottom-start`, `Se ha añadido un producto`)
+    sweetToast(`green`, `success`, `bottom-start`, `Se ha añadido un producto`);
   };
 };
 
-const setCart = (object) => {
+const setCart = (juegos) => {
   const product = {
-    id: object.querySelector(".btn-primary").id,
-    nombre: object.querySelector("h5").textContent,
-    precio: object.querySelector("p").textContent,
+    id: juegos.querySelector(".btn-primary").id,
+    nombre: juegos.querySelector("h5").textContent,
+    precio: juegos.querySelector("p").textContent,
     cantidad: 1,
   };
 
@@ -102,16 +120,15 @@ const setCart = (object) => {
 };
 
 const showCart = () => {
-  /* console.log(cart) */
   items.innerHTML = "";
-  Object.values(cart).forEach((product) => {
-    templateCart.querySelector("th").textContent = product.id;
-    templateCart.querySelectorAll("td")[0].textContent = product.nombre;
-    templateCart.querySelectorAll("td")[1].textContent = product.cantidad;
-    templateCart.querySelector(".btn-info").id = product.id;
-    templateCart.querySelector(".btn-danger").id = product.id;
+  Object.values(cart).forEach((juegos) => {
+    templateCart.querySelector("th").textContent = juegos.id;
+    templateCart.querySelectorAll("td")[0].textContent = juegos.nombre;
+    templateCart.querySelectorAll("td")[1].textContent = juegos.cantidad;
+    templateCart.querySelector(".btn-info").id = juegos.id;
+    templateCart.querySelector(".btn-danger").id = juegos.id;
     templateCart.querySelector("span").textContent =
-      product.cantidad * product.precio;
+      juegos.cantidad * juegos.precio;
     const clone = templateCart.cloneNode(true);
     fragment.appendChild(clone);
   });
@@ -151,7 +168,7 @@ const showFooter = () => {
   cleanCart.addEventListener(`click`, () => {
     cart = {};
     showCart();
-    sweetAlert(`error`, `El carrito ha sido eliminado`)
+    sweetAlert(`error`, `El carrito ha sido eliminado`);
   });
 };
 
@@ -162,11 +179,11 @@ const btnAction = (e) => {
 
     //optimizacion utilizando sugar syntax, operador++
     /* product.cantidad = cart[e.target.id].cantidad + 1; */
-    product.cantidad++
+    product.cantidad++;
     // utilizo operador avanzado spread
     cart[e.target.id] = { ...product };
     showCart();
-    sweetToast(`green`, `success`, `bottom-start`, `Se ha añadido un producto`)
+    sweetToast(`green`, `success`, `bottom-start`, `Se ha añadido un producto`);
   }
 
   if (e.target.classList.contains("btn-danger")) {
@@ -174,12 +191,12 @@ const btnAction = (e) => {
 
     //optimizacion utilizando sugar syntax, operador--
     /* product.cantidad = cart[e.target.id].cantidad - 1; */
-    product.cantidad--
+    product.cantidad--;
     if (product.cantidad === 0) {
       delete cart[e.target.id];
     }
     showCart();
-    sweetToast(`red`, `error`, `bottom-start`, `Se ha eliminado un producto`)
+    sweetToast(`red`, `error`, `bottom-start`, `Se ha eliminado un producto`);
   }
   //evitar la propagacion del evento
   e.stopPropagation();
@@ -200,13 +217,13 @@ const sweetAlert = (icono, texto) => {
     timer: 3000,
     timerProgressBar: true,
     showClass: {
-      popup: 'animate__animated animate__bounceInRight '
+      popup: "animate__animated animate__bounceInRight ",
     },
     hideClass: {
-      popup: 'animate__animated animate__bounceOutRight '
-    }
+      popup: "animate__animated animate__bounceOutRight ",
+    },
   });
-}
+};
 
 const sweetToast = (color, icono, posicion, texto) => {
   Swal.fire({
@@ -220,13 +237,13 @@ const sweetToast = (color, icono, posicion, texto) => {
     timerProgressBar: true,
     toast: true,
     showClass: {
-      popup: 'animate__animated animate__bounceInRight '
+      popup: "animate__animated animate__bounceInRight ",
     },
     hideClass: {
-      popup: 'animate__animated animate__bounceOutRight '
-    }
+      popup: "animate__animated animate__bounceOutRight ",
+    },
   });
-}
+};
 
 welcome();
 userGameSelector();
