@@ -9,17 +9,19 @@
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <title>Tienda de video-juegos</title>
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link href="https://bootswatch.com/5/morph/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 </head>
 
 <body>
-  <div id="welcome">
-    <form id="idForm" action="">
-      <input type="text" placeholder="Ingrese su nombre" id="nameForm">
-      <input type="text" placeholder="Ingrese su apellido" id="surnameForm">
+  <div id="welcome"><br>
+    <form id="idForm">
+      <input class="form-control form-control-sm"  placeholder="Ingrese su nombre" id="nameForm">
+      <input class="form-control form-control-sm" type="text" placeholder="Ingrese su apellido" id="surnameForm">
       <button id="send" type="submit" class="btn btn-secondary">Send</button>
-      <h1 id="greeting"></h1>
-    </form>
+    </form><br>
+    <h1 id="greeting"></h1>
   </div>
   <div id="games">
     <div id="divGames" class="row"></div>
